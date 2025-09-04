@@ -6,12 +6,13 @@ let currentSortCriteria = '합계';
 let currentSortOrder = 'desc';
 let currentFilterColumn = '모델명';
 let currentFilterValue = '';
-let groupSortOrder = 'asc';
 let debounceTimer;
 let detailSortCriteria = '개통일';
 let detailSortOrder = 'desc';
 let currentlyDisplayedData = [];
-
+let globalSortCriteria = '개통일';
+let globalSortOrder = 'desc';
+let currentSearchResults = [];
 
 // 페이지가 로드되면 서버에서 데이터를 가져오는 함수를 바로 실행합니다.
 document.addEventListener('DOMContentLoaded', () => {
@@ -36,7 +37,6 @@ function promptForAdminPassword() {
     }
 }
 
-
 // 서버로부터 최신 데이터를 가져오는 함수
 function fetchData() {
     fetch('/api/data')
@@ -44,7 +44,7 @@ function fetchData() {
         .then(data => {
             if (!data || data.length === 0) {
                 document.getElementById('display-area').innerHTML = 
-                    `<p>데이터가 없습니다. <a href="#" onclick="promptForAdminPassword()">관리자 페이지</a>에서 CSV 파일을 업로드해주세요.</p>`;
+                    `<p>데이터가 없습니다. <a href="/admin.html">관리자 페이지</a>에서 CSV 파일을 업로드해주세요.</p>`;
                 document.getElementById('group-buttons-container').innerHTML = '';
                 return;
             }
@@ -58,30 +58,19 @@ function fetchData() {
 }
 
 
-// ✨✨✨ 변경점: CSV 다운로드 기능 함수 수정 ✨✨✨
+// CSV 다운로드 기능 함수
 function downloadCSV() {
     if (currentlyDisplayedData.length === 0) {
         alert("다운로드할 데이터가 없습니다.");
         return;
     }
 
-    // 다운로드할 항목과 순서를 직접 지정합니다.
-    const headersToExport = [
-        '가입번호', '개통일', '고객명', '개통번호', '개통유형', '약정', 
-        '모델명', '일련번호', '요금제', '부가서비스', '당유', '접수코드불일치'
-    ];
-    
-    let csvContent = "\uFEFF" + headersToExport.join(",") + "\n"; // UTF-8 BOM 추가
+    const headers = Object.keys(currentlyDisplayedData[0]);
+    let csvContent = "\uFEFF" + headers.join(",") + "\n";
 
     currentlyDisplayedData.forEach(row => {
-        const values = headersToExport.map(header => {
+        const values = headers.map(header => {
             let value = row[header] === null || row[header] === undefined ? '' : row[header];
-
-            // '가입번호' 열일 경우, 엑셀에서 숫자가 깨지지 않도록 특수 처리합니다.
-            if (header === '가입번호') {
-                return `="${value}"`;
-            }
-            
             if (typeof value === 'string' && (value.includes(',') || value.includes('"'))) {
                 value = `"${value.replace(/"/g, '""')}"`;
             }
@@ -105,50 +94,109 @@ function downloadCSV() {
 }
 
 
-// 1. 전체 조회 기능
+// 1. 전체 조회 기능 (날짜 필터 추가)
 function performGlobalSearch() {
+    const startDate = document.getElementById('start-date').value;
+    const endDate = document.getElementById('end-date').value;
     const searchTerm = document.getElementById('global-search-input').value.toLowerCase();
-    const displayArea = document.getElementById('display-area');
-
-    if (!searchTerm) {
-        displayArea.innerHTML = '';
+    
+    if (!startDate && !endDate && !searchTerm) {
+        alert("검색할 기간이나 검색어를 입력해주세요.");
         return;
     }
 
-    const searchKeys = ['가입번호', '모델명', '일련번호', '고객명', '개통번호', '판매점명', '담당'];
-    const searchResults = allData.filter(row => {
-        return searchKeys.some(key => 
-            row[key] && row[key].toString().toLowerCase().includes(searchTerm)
-        );
-    });
+    let results = allData;
 
-    displaySearchResults(searchResults, searchTerm);
+    // 날짜 필터링
+    if (startDate) {
+        results = results.filter(row => row['개통일'] >= startDate);
+    }
+    if (endDate) {
+        results = results.filter(row => row['개통일'] <= endDate);
+    }
+    
+    // 텍스트 필터링
+    if (searchTerm) {
+        const searchKeys = ['가입번호', '모델명', '일련번호', '고객명', '개통번호', '판매점명', '담당'];
+        results = results.filter(row => {
+            return searchKeys.some(key => 
+                row[key] && row[key].toString().toLowerCase().includes(searchTerm)
+            );
+        });
+    }
+
+    currentSearchResults = results;
+    renderSearchResults();
 }
 
-function displaySearchResults(results, searchTerm) {
-    currentlyDisplayedData = results;
+function setGlobalSort(criteria) {
+    if (globalSortCriteria === criteria) {
+        globalSortOrder = globalSortOrder === 'desc' ? 'asc' : 'desc';
+    } else {
+        globalSortCriteria = criteria;
+        globalSortOrder = 'desc';
+    }
+    renderSearchResults();
+}
+
+function renderSearchResults() {
+    currentlyDisplayedData = currentSearchResults;
     const displayArea = document.getElementById('display-area');
     
+    // 제목 생성
+    const startDate = document.getElementById('start-date').value;
+    const endDate = document.getElementById('end-date').value;
+    const searchTerm = document.getElementById('global-search-input').value;
+    let title = "검색 결과";
+    if (startDate || endDate) {
+        title = `${startDate || ''} ~ ${endDate || ''} 기간 조회 결과`;
+    }
+    if (searchTerm) {
+        title += ` ('${searchTerm}' 포함)`;
+    }
+
     let html = `
         <div class="details-header">
-            <h2>'${searchTerm}' 검색 결과 (총 ${results.length}건)</h2>
+            <h2>${title} (총 ${currentSearchResults.length}건)</h2>
             <button class="btn btn-download" onclick="downloadCSV()">CSV 다운로드</button>
         </div>
     `;
 
-    if (results.length === 0) {
+    if (currentSearchResults.length === 0) {
         html += '<p>일치하는 결과가 없습니다.</p>';
         displayArea.innerHTML = html;
         return;
     }
 
+    // 정렬 로직 적용
+    currentSearchResults.sort((a, b) => {
+        const valA = a[globalSortCriteria] || '';
+        const valB = b[globalSortCriteria] || '';
+        if (globalSortOrder === 'asc') {
+            return valA.toString().localeCompare(valB.toString());
+        } else {
+            return valB.toString().localeCompare(valA.toString());
+        }
+    });
+    
+    const getSortArrow = (columnName) => {
+        return globalSortCriteria === columnName ? (globalSortOrder === 'desc' ? '▼' : '▲') : '';
+    };
+
     html += `<div class="table-wrapper"><table>
         <tr>
-            <th>가입번호</th><th>그룹</th><th>담당</th><th>판매점명</th><th>개통일</th>
-            <th>고객명</th><th>개통번호</th><th>모델명</th><th>일련번호</th>
+            <th class="sortable" onclick="setGlobalSort('가입번호')">가입번호 ${getSortArrow('가입번호')}</th>
+            <th class="sortable" onclick="setGlobalSort('그룹')">그룹 ${getSortArrow('그룹')}</th>
+            <th class="sortable" onclick="setGlobalSort('담당')">담당 ${getSortArrow('담당')}</th>
+            <th class="sortable" onclick="setGlobalSort('판매점명')">판매점명 ${getSortArrow('판매점명')}</th>
+            <th class="sortable" onclick="setGlobalSort('개통일')">개통일 ${getSortArrow('개통일')}</th>
+            <th class="sortable" onclick="setGlobalSort('고객명')">고객명 ${getSortArrow('고객명')}</th>
+            <th class="sortable" onclick="setGlobalSort('개통번호')">개통번호 ${getSortArrow('개통번호')}</th>
+            <th class="sortable" onclick="setGlobalSort('모델명')">모델명 ${getSortArrow('모델명')}</th>
+            <th class="sortable" onclick="setGlobalSort('일련번호')">일련번호 ${getSortArrow('일련번호')}</th>
         </tr>
     `;
-    results.forEach(row => {
+    currentSearchResults.forEach(row => {
         html += `
             <tr>
                 <td>${row['가입번호'] || ''}</td>
@@ -167,6 +215,10 @@ function displaySearchResults(results, searchTerm) {
     displayArea.innerHTML = html;
 }
 
+
+// (이하 나머지 코드는 이전 답변과 동일합니다. 그대로 사용하시면 됩니다.)
+// ... displayGroupButtons, displayGroupDetails, displayManagerDetails, displayStoreDetails 등 ...
+// ... 아래는 전체 코드를 다시 제공합니다.
 
 // 2. 그룹 버튼을 생성하는 함수
 function displayGroupButtons() {
