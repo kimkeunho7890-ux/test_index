@@ -6,13 +6,12 @@ let currentSortCriteria = '합계';
 let currentSortOrder = 'desc';
 let currentFilterColumn = '모델명';
 let currentFilterValue = '';
+let groupSortOrder = 'asc'; 
 let debounceTimer;
 let detailSortCriteria = '개통일';
 let detailSortOrder = 'desc';
 let currentlyDisplayedData = [];
-let globalSortCriteria = '개통일';
-let globalSortOrder = 'desc';
-let currentSearchResults = [];
+
 
 // 페이지가 로드되면 서버에서 데이터를 가져오는 함수를 바로 실행합니다.
 document.addEventListener('DOMContentLoaded', () => {
@@ -26,16 +25,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// 관리자 비밀번호 확인 함수
+// ✨✨✨ 변경점: 관리자 비밀번호 확인 함수 추가 ✨✨✨
 function promptForAdminPassword() {
     const password = prompt("관리자 비밀번호를 입력하세요:");
     if (password === "2178149594") {
+        // 비밀번호가 맞으면, 브라우저의 임시 저장소에 '인증됨' 표시를 남깁니다.
         sessionStorage.setItem('isAdminAuthenticated', 'true');
+        // 그 후에 관리자 페이지로 이동합니다.
         window.location.href = '/admin.html';
-    } else if (password !== null) {
+    } else if (password !== null) { // 사용자가 '취소'를 누르지 않았을 때만
         alert("비밀번호가 틀렸습니다.");
     }
 }
+
 
 // 서버로부터 최신 데이터를 가져오는 함수
 function fetchData() {
@@ -43,8 +45,9 @@ function fetchData() {
         .then(response => response.json())
         .then(data => {
             if (!data || data.length === 0) {
+                // ✨✨✨ 변경점: 데이터 없을 시 안내 문구의 링크 수정 ✨✨✨
                 document.getElementById('display-area').innerHTML = 
-                    `<p>데이터가 없습니다. <a href="/admin.html">관리자 페이지</a>에서 CSV 파일을 업로드해주세요.</p>`;
+                    `<p>데이터가 없습니다. <a href="#" onclick="promptForAdminPassword()">관리자 페이지</a>에서 CSV 파일을 업로드해주세요.</p>`;
                 document.getElementById('group-buttons-container').innerHTML = '';
                 return;
             }
@@ -57,6 +60,8 @@ function fetchData() {
         });
 }
 
+
+// (이하 나머지 코드는 이전 답변의 최종본과 동일합니다. 전체를 복사해서 붙여넣으세요.)
 
 // CSV 다운로드 기능 함수
 function downloadCSV() {
@@ -94,109 +99,50 @@ function downloadCSV() {
 }
 
 
-// 1. 전체 조회 기능 (날짜 필터 추가)
+// 1. 전체 조회 기능
 function performGlobalSearch() {
-    const startDate = document.getElementById('start-date').value;
-    const endDate = document.getElementById('end-date').value;
     const searchTerm = document.getElementById('global-search-input').value.toLowerCase();
-    
-    if (!startDate && !endDate && !searchTerm) {
-        alert("검색할 기간이나 검색어를 입력해주세요.");
+    const displayArea = document.getElementById('display-area');
+
+    if (!searchTerm) {
+        displayArea.innerHTML = '';
         return;
     }
 
-    let results = allData;
+    const searchKeys = ['가입번호', '모델명', '일련번호', '고객명', '개통번호', '판매점명', '담당'];
+    const searchResults = allData.filter(row => {
+        return searchKeys.some(key => 
+            row[key] && row[key].toString().toLowerCase().includes(searchTerm)
+        );
+    });
 
-    // 날짜 필터링
-    if (startDate) {
-        results = results.filter(row => row['개통일'] >= startDate);
-    }
-    if (endDate) {
-        results = results.filter(row => row['개통일'] <= endDate);
-    }
-    
-    // 텍스트 필터링
-    if (searchTerm) {
-        const searchKeys = ['가입번호', '모델명', '일련번호', '고객명', '개통번호', '판매점명', '담당'];
-        results = results.filter(row => {
-            return searchKeys.some(key => 
-                row[key] && row[key].toString().toLowerCase().includes(searchTerm)
-            );
-        });
-    }
-
-    currentSearchResults = results;
-    renderSearchResults();
+    displaySearchResults(searchResults, searchTerm);
 }
 
-function setGlobalSort(criteria) {
-    if (globalSortCriteria === criteria) {
-        globalSortOrder = globalSortOrder === 'desc' ? 'asc' : 'desc';
-    } else {
-        globalSortCriteria = criteria;
-        globalSortOrder = 'desc';
-    }
-    renderSearchResults();
-}
-
-function renderSearchResults() {
-    currentlyDisplayedData = currentSearchResults;
+function displaySearchResults(results, searchTerm) {
+    currentlyDisplayedData = results;
     const displayArea = document.getElementById('display-area');
     
-    // 제목 생성
-    const startDate = document.getElementById('start-date').value;
-    const endDate = document.getElementById('end-date').value;
-    const searchTerm = document.getElementById('global-search-input').value;
-    let title = "검색 결과";
-    if (startDate || endDate) {
-        title = `${startDate || ''} ~ ${endDate || ''} 기간 조회 결과`;
-    }
-    if (searchTerm) {
-        title += ` ('${searchTerm}' 포함)`;
-    }
-
     let html = `
         <div class="details-header">
-            <h2>${title} (총 ${currentSearchResults.length}건)</h2>
+            <h2>'${searchTerm}' 검색 결과 (총 ${results.length}건)</h2>
             <button class="btn btn-download" onclick="downloadCSV()">CSV 다운로드</button>
         </div>
     `;
 
-    if (currentSearchResults.length === 0) {
+    if (results.length === 0) {
         html += '<p>일치하는 결과가 없습니다.</p>';
         displayArea.innerHTML = html;
         return;
     }
 
-    // 정렬 로직 적용
-    currentSearchResults.sort((a, b) => {
-        const valA = a[globalSortCriteria] || '';
-        const valB = b[globalSortCriteria] || '';
-        if (globalSortOrder === 'asc') {
-            return valA.toString().localeCompare(valB.toString());
-        } else {
-            return valB.toString().localeCompare(valA.toString());
-        }
-    });
-    
-    const getSortArrow = (columnName) => {
-        return globalSortCriteria === columnName ? (globalSortOrder === 'desc' ? '▼' : '▲') : '';
-    };
-
     html += `<div class="table-wrapper"><table>
         <tr>
-            <th class="sortable" onclick="setGlobalSort('가입번호')">가입번호 ${getSortArrow('가입번호')}</th>
-            <th class="sortable" onclick="setGlobalSort('그룹')">그룹 ${getSortArrow('그룹')}</th>
-            <th class="sortable" onclick="setGlobalSort('담당')">담당 ${getSortArrow('담당')}</th>
-            <th class="sortable" onclick="setGlobalSort('판매점명')">판매점명 ${getSortArrow('판매점명')}</th>
-            <th class="sortable" onclick="setGlobalSort('개통일')">개통일 ${getSortArrow('개통일')}</th>
-            <th class="sortable" onclick="setGlobalSort('고객명')">고객명 ${getSortArrow('고객명')}</th>
-            <th class="sortable" onclick="setGlobalSort('개통번호')">개통번호 ${getSortArrow('개통번호')}</th>
-            <th class="sortable" onclick="setGlobalSort('모델명')">모델명 ${getSortArrow('모델명')}</th>
-            <th class="sortable" onclick="setGlobalSort('일련번호')">일련번호 ${getSortArrow('일련번호')}</th>
+            <th>가입번호</th><th>그룹</th><th>담당</th><th>판매점명</th><th>개통일</th>
+            <th>고객명</th><th>개통번호</th><th>모델명</th><th>일련번호</th>
         </tr>
     `;
-    currentSearchResults.forEach(row => {
+    results.forEach(row => {
         html += `
             <tr>
                 <td>${row['가입번호'] || ''}</td>
@@ -215,10 +161,6 @@ function renderSearchResults() {
     displayArea.innerHTML = html;
 }
 
-
-// (이하 나머지 코드는 이전 답변과 동일합니다. 그대로 사용하시면 됩니다.)
-// ... displayGroupButtons, displayGroupDetails, displayManagerDetails, displayStoreDetails 등 ...
-// ... 아래는 전체 코드를 다시 제공합니다.
 
 // 2. 그룹 버튼을 생성하는 함수
 function displayGroupButtons() {
