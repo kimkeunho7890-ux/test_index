@@ -1,29 +1,135 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>담당별 실적 조회</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>실적 조회 웹앱</title>
+  <style>
+    /* ====== 버튼 공통 스타일 ====== */
+    .btn {
+        background: #f5f7fa;
+        border: 1px solid #d0d7de;
+        border-radius: 8px;
+        padding: 6px 12px;
+        margin: 2px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.2s ease-in-out;
+    }
+    .btn:hover {
+        background: #e2e8f0;
+    }
+
+    /* 주요 버튼 */
+    .btn-home, .btn-download, .btn-nav {
+        background: #2563eb;
+        color: white;
+        border: none;
+    }
+    .btn-home:hover, .btn-download:hover, .btn-nav:hover {
+        background: #1e40af;
+    }
+
+    /* 보조 버튼 */
+    .btn-secondary {
+        background: #f0f9ff;
+        border: 1px solid #bae6fd;
+    }
+    .btn-secondary:hover {
+        background: #e0f2fe;
+    }
+
+    /* ====== 제목과 버튼 헤더 ====== */
+    .details-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+    .details-header h2 {
+        font-size: 20px;
+        margin: 0;
+        color: #111827;
+    }
+
+    /* ====== 테이블 ====== */
+    .table-wrapper {
+        overflow-x: auto;
+    }
+    .table-wrapper table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 12px 0;
+        font-size: 14px;
+    }
+    .table-wrapper th, .table-wrapper td {
+        border: 1px solid #e5e7eb;
+        padding: 8px 10px;
+        text-align: center;
+    }
+    .table-wrapper th {
+        background: #f9fafb;
+        cursor: pointer;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+    .table-wrapper tr:nth-child(even) {
+        background: #fdfdfd;
+    }
+    .table-wrapper tr:hover {
+        background: #f1f5f9;
+    }
+
+    /* ====== 검색/필터 영역 ====== */
+    .filter-controls, .global-search-container {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+    .filter-controls input, 
+    .filter-controls select, 
+    .global-search-container input {
+        padding: 6px 10px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+
+    /* ====== 페이징 ====== */
+    .pagination-controls {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 16px 0;
+        gap: 8px;
+    }
+    .pagination-info {
+        font-weight: bold;
+        color: #374151;
+    }
+
+    /* ====== 그룹 버튼 컨테이너 ====== */
+    #group-buttons-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 16px;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>담당별 실적 조회</h1>
-        <p>최신 실적 데이터를 확인하세요. (<a href="#" onclick="promptForAdminPassword()">관리자 페이지</a>)</p>
-        
-        <div class="global-search-container">
-            <h2>전체 실적 조회</h2>
-            <div class="filter-controls">
-                <input type="text" id="global-search-input" placeholder="가입번호, 모델명, 고객명, 번호 등 검색...">
-                <button class="btn" onclick="performGlobalSearch()">검색</button>
-            </div>
-        </div>
-        
-        <hr>
+  <!-- 🔍 전체 검색 영역 -->
+  <div class="global-search-container" style="display:none;">
+      <input type="text" id="global-search-input" placeholder="전체 검색 (엔터 입력)">
+  </div>
 
-        <div id="group-buttons-container"></div>
-        <div id="display-area"></div>
-    </div>
-    <script src="script.js"></script>
+  <!-- 그룹 버튼 영역 -->
+  <div id="group-buttons-container"></div>
+
+  <!-- 결과 표시 영역 -->
+  <div id="display-area"></div>
+
+  <!-- 📌 기존 JavaScript 코드 포함 -->
+  <script src="app.js"></script>
 </body>
 </html>
