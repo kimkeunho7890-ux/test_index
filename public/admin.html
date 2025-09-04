@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자: 실적 데이터 업로드</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        // 페이지가 열리자마자 비밀번호 인증을 받았는지 확인합니다.
+        if (sessionStorage.getItem('isAdminAuthenticated') !== 'true') {
+            alert('접근 권한이 없습니다. 첫 화면에서 다시 시도해주세요.');
+            window.location.href = '/'; // 인증되지 않았다면 첫 화면으로 쫓아냅니다.
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>실적 데이터 업로드 (관리자용)</h1>
+        <p>새로운 CSV 파일을 업로드하면 모든 사용자가 보는 데이터가 업데이트됩니다.</p>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <input type="file" name="csvfile" accept=".csv" required>
+            <button type="submit" class="btn">업로드 및 데이터 갱신</button>
+        </form>
+        <br>
+        <button class="btn btn-back" onclick="window.location.href='/'">첫 화면으로 가기</button>
+    </div>
+</body>
+</html>
