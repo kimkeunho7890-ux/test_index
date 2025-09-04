@@ -65,18 +65,24 @@ function fetchData() {
 
 // (이하 나머지 코드는 이전 답변의 최종본과 동일합니다. 전체를 복사해서 붙여넣으세요.)
 
-// CSV 다운로드 기능 함수
+// ✨✨✨ 3. 기존 downloadCSV 함수를 이 코드로 교체해주세요 ✨✨✨
 function downloadCSV() {
     if (currentlyDisplayedData.length === 0) {
         alert("다운로드할 데이터가 없습니다.");
         return;
     }
 
-    const headers = Object.keys(currentlyDisplayedData[0]);
-    let csvContent = "\uFEFF" + headers.join(",") + "\n";
+    // 다운로드할 항목과 순서를 직접 지정합니다.
+    const headersToExport = [
+        '가입번호', '담당', '판매점명', '연합', '개통일', '고객명', '개통번호', 
+        '개통유형', '약정', '모델명', '일련번호', '요금제', '부가서비스', 
+        '당유', '접수코드불일치'
+    ];
+    
+    let csvContent = "\uFEFF" + headersToExport.join(",") + "\n"; // UTF-8 BOM 추가
 
     currentlyDisplayedData.forEach(row => {
-        const values = headers.map(header => {
+        const values = headersToExport.map(header => {
             let value = row[header] === null || row[header] === undefined ? '' : row[header];
             if (typeof value === 'string' && (value.includes(',') || value.includes('"'))) {
                 value = `"${value.replace(/"/g, '""')}"`;
@@ -99,7 +105,6 @@ function downloadCSV() {
         document.body.removeChild(link);
     }
 }
-
 
 // 1. 전체 조회 기능 (수정됨)
 function performGlobalSearch() {
@@ -607,4 +612,5 @@ function renderStoreDetailsTable(page = 1) {
     document.getElementById('filter-column').value = currentFilterColumn;
     document.getElementById('filter-input').value = currentFilterValue;
 }
+
 
