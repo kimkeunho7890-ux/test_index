@@ -35,8 +35,13 @@ hr { border: none; border-top: 1px solid #eee; margin: 20px 0; }
 table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.95em; }
 th, td { border: 1px solid #ddd; padding: 10px; text-align: center; vertical-align: middle; }
 th { background-color: #ecf0f1; font-weight: bold; color: #444; }
-th.sortable { cursor: pointer; user-select: none; }
-th.sortable:hover { background-color: #dbe4e6; }
+th.sortable {
+    cursor: pointer;
+    user-select: none; /* 텍스트 선택 방지 */
+}
+th.sortable:hover {
+    background-color: #dbe4e6; /* 마우스 올렸을 때 색 변경 */
+}
 table th:first-child { position: -webkit-sticky; position: sticky; left: 0; z-index: 2; background-color: #e2e8ea; }
 table td:first-child { position: -webkit-sticky; position: sticky; left: 0; z-index: 1; background-color: #ffffff; font-weight: bold; color: #333; }
 .details-list { list-style-type: none; padding: 0; }
@@ -66,3 +71,4 @@ table td:first-child { position: -webkit-sticky; position: sticky; left: 0; z-in
     .sort-controls { margin: 10px 0 5px; }
     .sort-controls .btn { font-size: 0.75em; }
 }
+
