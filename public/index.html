@@ -2,27 +2,20 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale-1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>담당별 실적 조회</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <h1>담당별 실적 조회</h1>
-        <p>최신 실적 데이터를 확인하세요. (<a href="/admin.html">관리자 페이지</a>)</p>
+        <p>최신 실적 데이터를 확인하세요. (<a href="#" onclick="promptForAdminPassword()">관리자 페이지</a>)</p>
         
         <div class="global-search-container">
             <h2>전체 실적 조회</h2>
-            <div class="filter-group">
-                <div class="filter-controls date-filters">
-                    <input type="date" id="start-date">
-                    <span>~</span>
-                    <input type="date" id="end-date">
-                </div>
-                <div class="filter-controls">
-                    <input type="text" id="global-search-input" placeholder="모델명, 고객명, 번호 등 추가 검색...">
-                    <button class="btn" onclick="performGlobalSearch()">검색</button>
-                </div>
+            <div class="filter-controls">
+                <input type="text" id="global-search-input" placeholder="가입번호, 모델명, 고객명, 번호 등 검색...">
+                <button class="btn" onclick="performGlobalSearch()">검색</button>
             </div>
         </div>
         
