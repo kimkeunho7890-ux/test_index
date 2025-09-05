@@ -246,144 +246,146 @@ function safeParseFloat(value) {
 
 // 3. 그룹 버튼 클릭 시 담당별/그룹별 실적을 표시하는 함수
 function displayGroupDetails(groupName) {
-    document.querySelector('.global-search-container').style.display = 'none';
+     document.querySelector('.global-search-container').style.display = 'none';
 
-    const displayArea = document.getElementById('display-area');
-    
-    const isOverallView = groupName === '전체';
-    const dataToShow = isOverallView ? allData : allData.filter(row => (row['그룹'] || '').trim() === groupName);
-    const aggregationKey = isOverallView ? '그룹' : '담당';
-        
-    const stats = {};
-    dataToShow.forEach(row => {
-        const key = (row[aggregationKey] || '기타').trim();
-        if (!key) return;
+     const displayArea = document.getElementById('display-area');
+     
+     const isOverallView = groupName === '전체';
+     const dataToShow = isOverallView ? allData : allData.filter(row => (row['그룹'] || '').trim() === groupName);
+     const aggregationKey = isOverallView ? '그룹' : '담당';
+         
+     const stats = {};
+     dataToShow.forEach(row => {
+         const key = (row[aggregationKey] || '기타').trim();
+         if (!key) return;
 
-        if (!stats[key]) {
-    stats[key] = { '신규': 0, 'MNP': 0, '기변': 0, '2nd': 0, '합계': 0, 'VAS': 0, '고가치(95)': 0, 'VAS모수': 0, '고가치모수': 0, '당유인정': 0, '당유전체': 0 };
-}
-        stats[key]['신규'] += safeParseInt(row['신규']);
-        stats[key]['MNP'] += safeParseInt(row['MNP']);
-        stats[key]['기변'] += safeParseInt(row['기변']);
-        stats[key]['합계'] += safeParseInt(row['합계']);
-        stats[key]['VAS'] += safeParseFloat(row['VAS']);
-        stats[key]['고가치(95)'] += safeParseFloat(row['고가치(95)']);
-        stats[key]['VAS모수'] += safeParseInt(row['VAS모수']);
-        stats[key]['고가치모수'] += safeParseInt(row['고가치모수']);
-        
-        if (row['모델유형'] && row['모델유형'].includes('2nd')) {
-            stats[key]['2nd'] += 1;
+         if (!stats[key]) {
+            stats[key] = { '신규': 0, 'MNP': 0, '기변': 0, '2nd': 0, '합계': 0, 'VAS': 0, '고가치(95)': 0, 'VAS모수': 0, '고가치모수': 0, '당유인정': 0, '당유전체': 0 };
         }
-        if (row['당유'] === '인정') {
-            stats[key]['당유인정'] += 1;
+         stats[key]['신규'] += safeParseInt(row['신규']);
+         stats[key]['MNP'] += safeParseInt(row['MNP']);
+         stats[key]['기변'] += safeParseInt(row['기변']);
+         stats[key]['합계'] += safeParseInt(row['합계']);
+         stats[key]['VAS'] += safeParseFloat(row['VAS']);
+         stats[key]['고가치(95)'] += safeParseFloat(row['고가치(95)']);
+         stats[key]['VAS모수'] += safeParseInt(row['VAS모수']);
+         stats[key]['고가치모수'] += safeParseInt(row['고가치모수']);
+         
+         if (row['모델유형'] && row['모델유형'].includes('2nd')) {
+             stats[key]['2nd'] += 1;
+         }
+         if (row['당유'] === '인정') {
+             stats[key]['당유인정'] += 1;
+             stats[key]['당유전체'] += 1;
+        } else if (row['당유'] === '미인정') {
             stats[key]['당유전체'] += 1;
-} else if (row['당유'] === '미인정') {
-    stats[key]['당유전체'] += 1;
-}
-    });
+        }
+     });
 
-    let html = `
-        <div class="details-header">
-            <h2>${groupName} 실적</h2>
-            <button class="btn btn-home" onclick="displayGroupButtons()">처음으로</button>
-        </div>
-        <div class="table-wrapper"><table><tr><th>항목</th>
-    `;
-    
-    const columns = Object.keys(stats).sort((a, b) => {
-        return stats[b]['합계'] - stats[a]['합계'];
-    });
-    
-    const fields = ['신규', 'MNP', '기변', '2nd', '합계', 'MNP(%)', 'VAS(%)', '고가치(95)(%)', '당유(%)'];
+     let html = `
+         <div class="details-header">
+             <h2>${groupName} 실적</h2>
+             <button class="btn btn-home" onclick="displayGroupButtons()">처음으로</button>
+         </div>
+         <div class="table-wrapper"><table><tr><th>항목</th>
+     `;
+     
+     const columns = Object.keys(stats).sort((a, b) => {
+         return stats[b]['합계'] - stats[a]['합계'];
+     });
+     
+     const fields = ['신규', 'MNP', '기변', '2nd', '합계', 'MNP(%)', 'VAS(%)', '고가치(95)(%)', '당유(%)'];
 
-    if (isOverallView) {
-        const totalStats = { '신규': 0, 'MNP': 0, '기변': 0, '2nd': 0, '합계': 0, 'VAS': 0, '고가치(95)': 0, 'VAS모수': 0, '고가치모수': 0 };
-        Object.values(stats).forEach(groupStat => {
-            for (const key in totalStats) {
-                totalStats[key] += groupStat[key];
-            }
-        });
-        
-        html += `<th>그룹전체</th>`;
-        columns.forEach(col => {
-            html += `<th>${col}</th>`;
-        });
-        html += `</tr>`;
+     if (isOverallView) {
+        // ✨ 수정된 부분 1: totalStats 객체에 '당유인정', '당유전체' 추가
+         const totalStats = { '신규': 0, 'MNP': 0, '기변': 0, '2nd': 0, '합계': 0, 'VAS': 0, '고가치(95)': 0, 'VAS모수': 0, '고가치모수': 0, '당유인정': 0, '당유전체': 0 };
+         Object.values(stats).forEach(groupStat => {
+             for (const key in totalStats) {
+                 totalStats[key] += groupStat[key];
+             }
+         });
+         
+         html += `<th>그룹전체</th>`;
+         columns.forEach(col => {
+             html += `<th>${col}</th>`;
+         });
+         html += `</tr>`;
 
-        fields.forEach(field => {
-            html += `<tr><td>${field}</td>`;
+         fields.forEach(field => {
+             html += `<tr><td>${field}</td>`;
 
-            let totalValue = '';
-            if (field === 'MNP(%)') {
-                const totalSales = totalStats['신규'] + totalStats['MNP'] + totalStats['기변'];
-                totalValue = totalSales > 0 ? ((totalStats['MNP'] / totalSales) * 100).toFixed(2) + '%' : '0%';
-            } else if (field === 'VAS(%)') {
-                totalValue = totalStats['VAS모수'] > 0 ? ((totalStats['VAS'] / totalStats['VAS모수']) * 100).toFixed(2) + '%' : '0%';
-            } else if (field === '고가치(95)(%)') {
-                totalValue = totalStats['고가치모수'] > 0 ? ((totalStats['고가치(95)'] / totalStats['고가치모수']) * 100).toFixed(2) + '%' : '0%';
-            } else if (field === '당유(%)') {
-                totalValue = totalStats['당유전체'] > 0 ? ((totalStats['당유인정'] / totalStats['당유전체']) * 100).toFixed(2) + '%' : '0%';
-            } else {
-                totalValue = totalStats[field.replace('(%)', '')];
-            }
-            html += `<td>${totalValue}</td>`;
+             let totalValue = '';
+             if (field === 'MNP(%)') {
+                 const totalSales = totalStats['신규'] + totalStats['MNP'] + totalStats['기변'];
+                 totalValue = totalSales > 0 ? ((totalStats['MNP'] / totalSales) * 100).toFixed(2) + '%' : '0%';
+             } else if (field === 'VAS(%)') {
+                 totalValue = totalStats['VAS모수'] > 0 ? ((totalStats['VAS'] / totalStats['VAS모수']) * 100).toFixed(2) + '%' : '0%';
+             } else if (field === '고가치(95)(%)') {
+                 totalValue = totalStats['고가치모수'] > 0 ? ((totalStats['고가치(95)'] / totalStats['고가치모수']) * 100).toFixed(2) + '%' : '0%';
+            // ✨ 수정된 부분 2: '당유(%)' 계산 시 변수명 오류 수정
+             } else if (field === '당유(%)') {
+                 totalValue = totalStats['당유전체'] > 0 ? ((totalStats['당유인정'] / totalStats['당유전체']) * 100).toFixed(2) + '%' : '0%';
+             } else {
+                 totalValue = totalStats[field.replace('(%)', '')];
+             }
+             html += `<td>${totalValue}</td>`;
 
-            columns.forEach(col => {
-                const statData = stats[col];
-                let value = '';
-                if (field === 'MNP(%)') {
-                    const totalSales = statData['신규'] + statData['MNP'] + statData['기변'];
-                    value = totalSales > 0 ? ((statData['MNP'] / totalSales) * 100).toFixed(2) + '%' : '0%';
-                } else if (field === 'VAS(%)') {
-                    value = statData['VAS모수'] > 0 ? ((statData['VAS'] / statData['VAS모수']) * 100).toFixed(2) + '%' : '0%';
-                } else if (field === '고가치(95)(%)') {
-                    value = statData['고가치모수'] > 0 ? ((statData['고가치(95)'] / statData['고가치모수']) * 100).toFixed(2) + '%' : '0%';
-                } else if (field === '당유(%)') {
-                    value = statData['당유전체'] > 0 ? ((statData['당유인정'] / statData['당유전체']) * 100).toFixed(2) + '%' : '0%';    
-                } else {
-                    value = statData[field.replace('(%)', '')];
-                }
-                // '합계' 행일 경우에만 strong 태그를 추가하여 글자를 굵게 만듭니다.
-if (field === '합계') {
-    html += `<td><strong>${value}</strong></td>`;
-} else {
-    html += `<td>${value}</td>`;
-}
-            });
-            html += `</tr>`;
-        });
+             columns.forEach(col => {
+                 const statData = stats[col];
+                 let value = '';
+                 if (field === 'MNP(%)') {
+                     const totalSales = statData['신규'] + statData['MNP'] + statData['기변'];
+                     value = totalSales > 0 ? ((statData['MNP'] / totalSales) * 100).toFixed(2) + '%' : '0%';
+                 } else if (field === 'VAS(%)') {
+                     value = statData['VAS모수'] > 0 ? ((statData['VAS'] / statData['VAS모수']) * 100).toFixed(2) + '%' : '0%';
+                 } else if (field === '고가치(95)(%)') {
+                     value = statData['고가치모수'] > 0 ? ((statData['고가치(95)'] / statData['고가치모수']) * 100).toFixed(2) + '%' : '0%';
+                 } else if (field === '당유(%)') {
+                     value = statData['당유전체'] > 0 ? ((statData['당유인정'] / statData['당유전체']) * 100).toFixed(2) + '%' : '0%';    
+                 } else {
+                     value = statData[field.replace('(%)', '')];
+                 }
 
-    } else {
-        columns.forEach(col => {
-            html += `<th><button class="btn btn-secondary" onclick="displayManagerDetails('${col}')">상세</button><br>${col}</th>`;
-        });
-        html += `</tr>`;
-        
-        fields.forEach(field => {
-            html += `<tr><td>${field}</td>`;
-            columns.forEach(col => {
-                const statData = stats[col];
-                let value = '';
-                if (field === 'MNP(%)') {
-                    const totalSales = statData['신규'] + statData['MNP'] + statData['기변'];
-                    value = totalSales > 0 ? ((statData['MNP'] / totalSales) * 100).toFixed(2) + '%' : '0%';
-                } else if (field === 'VAS(%)') {
-                    value = statData['VAS모수'] > 0 ? ((statData['VAS'] / statData['VAS모수']) * 100).toFixed(2) + '%' : '0%';
-                } else if (field === '고가치(95)(%)') {
-                    value = statData['고가치모수'] > 0 ? ((statData['고가치(95)'] / statData['고가치모수']) * 100).toFixed(2) + '%' : '0%';
-                } else if (field === '당유(%)') {
-                   value = statData['당유전체'] > 0 ? ((statData['당유인정'] / statData['당유전체']) * 100).toFixed(2) + '%' : '0%';    
-                } else {
-                    value = statData[field.replace('(%)', '')];
-                }
-                html += `<td>${value}</td>`;
-            });
-            html += `</tr>`;
-        });
-    }
-    
-    html += `</table></div>`;
-    displayArea.innerHTML = html;
+                    if (field === '합계') {
+                        html += `<td><strong>${value}</strong></td>`;
+                    } else {
+                        html += `<td>${value}</td>`;
+                    }
+             });
+             html += `</tr>`;
+         });
+
+     } else {
+         columns.forEach(col => {
+             html += `<th><button class="btn btn-secondary" onclick="displayManagerDetails('${col}')">상세</button><br>${col}</th>`;
+         });
+         html += `</tr>`;
+         
+         fields.forEach(field => {
+             html += `<tr><td>${field}</td>`;
+             columns.forEach(col => {
+                 const statData = stats[col];
+                 let value = '';
+                 if (field === 'MNP(%)') {
+                     const totalSales = statData['신규'] + statData['MNP'] + statData['기변'];
+                     value = totalSales > 0 ? ((statData['MNP'] / totalSales) * 100).toFixed(2) + '%' : '0%';
+                 } else if (field === 'VAS(%)') {
+                     value = statData['VAS모수'] > 0 ? ((statData['VAS'] / statData['VAS모수']) * 100).toFixed(2) + '%' : '0%';
+                 } else if (field === '고가치(95)(%)') {
+                     value = statData['고가치모수'] > 0 ? ((statData['고가치(95)'] / statData['고가치모수']) * 100).toFixed(2) + '%' : '0%';
+                 } else if (field === '당유(%)') {
+                    value = statData['당유전체'] > 0 ? ((statData['당유인정'] / statData['당유전체']) * 100).toFixed(2) + '%' : '0%';    
+                 } else {
+                     value = statData[field.replace('(%)', '')];
+                 }
+                 html += `<td>${value}</td>`;
+             });
+             html += `</tr>`;
+         });
+     }
+     
+     html += `</table></div>`;
+     displayArea.innerHTML = html;
 }
 
 // 4. 담당자 '상세보기' 클릭 시 판매점별 실적 표시
@@ -436,53 +438,54 @@ function setSort(criteria) {
 }
 
 function renderManagerDetails() {
-    const displayArea = document.getElementById('display-area');
+     const displayArea = document.getElementById('display-area');
 
-    let html = `
-        <div class="details-header">
-            <h2>${currentManagerName} 담당 판매점 목록</h2>
-            <button class="btn btn-home" onclick="displayGroupButtons()">처음으로</button>
-        </div>
-    `;
-    
-    html += `
-        <div class="sort-controls">
-            <button class="btn" onclick="setSort('합계')">합계 ${currentSortCriteria === '합계' ? (currentSortOrder === 'desc' ? '▼' : '▲') : ''}</button>
-            <button class="btn" onclick="setSort('이름')">이름 ${currentSortCriteria === '이름' ? (currentSortOrder === 'desc' ? '▼' : '▲') : ''}</button>
-        </div>
-    `;
+     let html = `
+         <div class="details-header">
+             <h2>${currentManagerName} 담당 판매점 목록</h2>
+             <button class="btn btn-home" onclick="displayGroupButtons()">처음으로</button>
+         </div>
+     `;
+     
+     html += `
+         <div class="sort-controls">
+             <button class="btn" onclick="setSort('합계')">합계 ${currentSortCriteria === '합계' ? (currentSortOrder === 'desc' ? '▼' : '▲') : ''}</button>
+             <button class="btn" onclick="setSort('이름')">이름 ${currentSortCriteria === '이름' ? (currentSortOrder === 'desc' ? '▼' : '▲') : ''}</button>
+         </div>
+     `;
 
-    html += `<ul class="details-list">`;
-    
-    const sortedStores = Object.keys(currentStoreStats).sort((a, b) => {
-        if (currentSortCriteria === '이름') {
-            return currentSortOrder === 'asc' ? a.localeCompare(b) : b.localeCompare(a);
-        } else {
-            return currentSortOrder === 'asc' ? currentStoreStats[a]['합계'] - currentStoreStats[b]['합계'] : currentStoreStats[b]['합계'] - currentStoreStats[a]['합계'];
-        }
-    });
+     html += `<ul class="details-list">`;
+     
+     const sortedStores = Object.keys(currentStoreStats).sort((a, b) => {
+         if (currentSortCriteria === '이름') {
+             return currentSortOrder === 'asc' ? a.localeCompare(b) : b.localeCompare(a);
+         } else {
+             return currentSortOrder === 'asc' ? currentStoreStats[a]['합계'] - currentStoreStats[b]['합계'] : currentStoreStats[b]['합계'] - currentStoreStats[a]['합계'];
+         }
+     });
 
-    currentManagerStoreList = sortedStores;
+     currentManagerStoreList = sortedStores;
 
-    sortedStores.forEach(store => {
-        const stats = currentStoreStats[store];
-        const vasPercent = stats['VAS모수'] > 0 ? ((stats['VAS'] / stats['VAS모수']) * 100).toFixed(2) : 0;
-        const highValuePercent = stats['고가치모수'] > 0 ? ((stats['고가치(95)'] / stats['고가치모수']) * 100).toFixed(2) : 0;
-        const dangyouPercent = stats['당유전체'] > 0 ? ((stats['당유인정'] / stats['당유전체']) * 100).toFixed(2) : 0;
-        
-        html += `
-            <li>
-                <strong>
-            <button class="btn btn-secondary" onclick="displayStoreDetails('${store}', '${currentManagerName}')">상세</button>
-            ${store}
-        </strong><br>
-        - 합계: <strong>${stats['합계']}</strong> (신규:${stats['신규']}, MNP:${stats['MNP']}, 기변:${stats['기변']}, 2nd:${stats['2nd']})<br>
-        - VAS: ${vasPercent}% | 고가치(95): ${highValuePercent}% | 당유: ${dangyouPercent}%
-            </li>
-        `;
-    });
-    html += `</ul>`;
-    displayArea.innerHTML = html;
+     sortedStores.forEach(store => {
+         const stats = currentStoreStats[store];
+         const vasPercent = stats['VAS모수'] > 0 ? ((stats['VAS'] / stats['VAS모수']) * 100).toFixed(2) : 0;
+         const highValuePercent = stats['고가치모수'] > 0 ? ((stats['고가치(95)'] / stats['고가치모수']) * 100).toFixed(2) : 0;
+        // ✨ 수정된 부분: dangyouPercent 변수 계산 로직 추가
+         const dangyouPercent = stats['당유전체'] > 0 ? ((stats['당유인정'] / stats['당유전체']) * 100).toFixed(2) : 0;
+         
+         html += `
+             <li>
+                 <strong>
+             <button class="btn btn-secondary" onclick="displayStoreDetails('${store}', '${currentManagerName}')">상세</button>
+             ${store}
+         </strong><br>
+         - 합계: <strong>${stats['합계']}</strong> (신규:${stats['신규']}, MNP:${stats['MNP']}, 기변:${stats['기변']}, 2nd:${stats['2nd']})<br>
+         - VAS: ${vasPercent}% | 고가치(95): ${highValuePercent}% | 당유: ${dangyouPercent}%
+             </li>
+         `;
+     });
+     html += `</ul>`;
+     displayArea.innerHTML = html;
 }
 
 
@@ -637,6 +640,7 @@ function renderStoreDetailsTable(page = 1) {
     document.getElementById('filter-column').value = currentFilterColumn;
     document.getElementById('filter-input').value = currentFilterValue;
 }
+
 
 
 
