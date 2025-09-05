@@ -106,6 +106,7 @@ function downloadCSV() {
     }
 }
 
+
 // 1. 전체 조회 기능 (수정됨)
 function performGlobalSearch() {
     const searchTerm = document.getElementById('global-search-input').value.toLowerCase();
@@ -332,7 +333,12 @@ function displayGroupDetails(groupName) {
                 } else {
                     value = statData[field.replace('(%)', '')];
                 }
-                html += `<td>${value}</td>`;
+                // '합계' 행일 경우에만 strong 태그를 추가하여 글자를 굵게 만듭니다.
+if (field === '합계') {
+    html += `<td><strong>${value}</strong></td>`;
+} else {
+    html += `<td>${value}</td>`;
+}
             });
             html += `</tr>`;
         });
@@ -451,7 +457,7 @@ function renderManagerDetails() {
                     <button class="btn btn-secondary" onclick="displayStoreDetails('${store}', '${currentManagerName}')">상세</button>
                     ${store}
                 </strong><br>
-                - 합계: ${stats['합계']} (신규:${stats['신규']}, MNP:${stats['MNP']}, 기변:${stats['기변']}, 2nd:${stats['2nd']})<br>
+                - 합계: <strong>${stats['합계']}</strong> (신규:${stats['신규']}, MNP:${stats['MNP']}, 기변:${stats['기변']}, 2nd:${stats['2nd']})<br>
                 - VAS: ${vasPercent}% | 고가치(95): ${highValuePercent}%
             </li>
         `;
@@ -612,5 +618,4 @@ function renderStoreDetailsTable(page = 1) {
     document.getElementById('filter-column').value = currentFilterColumn;
     document.getElementById('filter-input').value = currentFilterValue;
 }
-
 

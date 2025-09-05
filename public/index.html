@@ -1,154 +1,29 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>실적 조회 </title>
-  <style>
-    body {
-        background: #0f172a; /* 전체 배경 */
-        color: #e2e8f0; /* 기본 텍스트 */
-        font-family: sans-serif;
-        margin: 20px;
-    }
-
-    /* ====== 버튼 공통 스타일 ====== */
-    .btn {
-        background: #1e293b;
-        border: 1px solid #334155;
-        border-radius: 8px;
-        padding: 6px 12px;
-        margin: 2px;
-        cursor: pointer;
-        font-size: 14px;
-        color: #e2e8f0;
-        transition: all 0.2s ease-in-out;
-    }
-    .btn:hover {
-        background: #334155;
-    }
-
-    /* 주요 버튼 */
-    .btn-home, .btn-download, .btn-nav {
-        background: #2563eb;
-        color: white;
-        border: none;
-    }
-    .btn-home:hover, .btn-download:hover, .btn-nav:hover {
-        background: #1e40af;
-    }
-
-    /* 보조 버튼 */
-    .btn-secondary {
-        background: #0ea5e9;
-        color: white;
-        border: none;
-    }
-    .btn-secondary:hover {
-        background: #0284c7;
-    }
-
-    /* ====== 제목과 버튼 헤더 ====== */
-    .details-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 12px;
-    }
-    .details-header h2 {
-        font-size: 20px;
-        margin: 0;
-        color: #f1f5f9;
-    }
-
-    /* ====== 테이블 ====== */
-    .table-wrapper {
-        overflow-x: auto;
-    }
-    .table-wrapper table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 12px 0;
-        font-size: 14px;
-    }
-    .table-wrapper th, .table-wrapper td {
-        border: 1px solid #334155;
-        padding: 8px 10px;
-        text-align: center;
-    }
-    .table-wrapper th {
-        background: #1e293b;
-        color: #f8fafc;
-        cursor: pointer;
-        position: sticky;
-        top: 0;
-        z-index: 1;
-    }
-    .table-wrapper tr:nth-child(even) {
-        background: #1e293b;
-    }
-    .table-wrapper tr:nth-child(odd) {
-        background: #0f172a;
-    }
-    .table-wrapper tr:hover {
-        background: #334155;
-    }
-
-    /* ====== 검색/필터 영역 ====== */
-    .filter-controls, .global-search-container {
-        display: flex;
-        gap: 8px;
-        margin-bottom: 12px;
-    }
-    .filter-controls input, 
-    .filter-controls select, 
-    .global-search-container input {
-        padding: 6px 10px;
-        border: 1px solid #334155;
-        border-radius: 6px;
-        font-size: 14px;
-        background: #1e293b;
-        color: #f1f5f9;
-    }
-    .filter-controls input::placeholder,
-    .global-search-container input::placeholder {
-        color: #94a3b8;
-    }
-
-    /* ====== 페이징 ====== */
-    .pagination-controls {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 16px 0;
-        gap: 8px;
-    }
-    .pagination-info {
-        font-weight: bold;
-        color: #cbd5e1;
-    }
-
-    /* ====== 그룹 버튼 컨테이너 ====== */
-    #group-buttons-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-        margin-bottom: 16px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>담당별 실적 조회</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- 🔍 전체 검색 영역 -->
-  <div class="global-search-container" style="display:none;">
-      <input type="text" id="global-search-input" placeholder="전체 검색 (엔터 입력)">
-  </div>
+    <div class="container">
+        <h1>담당별 실적 조회</h1>
+        <p>최신 실적 데이터를 확인하세요. (<a href="#" onclick="promptForAdminPassword()">관리자 페이지</a>)</p>
+        
+        <div class="global-search-container">
+            <h2>전체 실적 조회</h2>
+            <div class="filter-controls">
+                <input type="text" id="global-search-input" placeholder="가입번호, 모델명, 고객명, 번호 등 검색...">
+                <button class="btn" onclick="performGlobalSearch()">검색</button>
+            </div>
+        </div>
+        
+        <hr>
 
-  <!-- 그룹 버튼 영역 -->
-  <div id="group-buttons-container"></div>
-
-  <!-- 결과 표시 영역 -->
-  <div id="display-area"></div>
-
-  <!-- 📌 기존 JavaScript 코드 포함 -->
-  <script src="app.js"></script>
+        <div id="group-buttons-container"></div>
+        <div id="display-area"></div>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
