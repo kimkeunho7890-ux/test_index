@@ -69,7 +69,7 @@ hr {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 /* 전체 검색창 디자인 */
@@ -113,13 +113,13 @@ hr {
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 5px;
     margin-bottom: 5px;
 }
 .nav-buttons {
     display: flex;
     gap: 5px;
-    align-items: center;
+    align-items: right;
     margin-left: auto;
 }
 .sort-controls {
@@ -229,7 +229,7 @@ table td:first-child {
     background-color: #ffffff;
     border: 1px solid #e9ecef;
     border-radius: 8px;
-    padding: 0 0 0 0; /* 상, 우, 하, 좌 여백 */
+    padding: 15px 0; /* 상, 우, 하, 좌 여백 */
     margin-top: 16px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
@@ -244,7 +244,7 @@ table td:first-child {
 /* 카드 제목 (버튼 + 판매점명) 스타일 (중복 통합) */
 .details-list li strong {
     display: flex;
-    gap: 5px;
+    gap: 0px;
     align-items: center;
     font-size: 1.1em;
     color: #343a40;
@@ -360,7 +360,7 @@ table td:first-child {
   min-width: 60px;
   white-space: normal;
   word-break: break-all;
-  text-align: left; /* ✨ 이 줄을 추가하여 우측 정렬합니다. */
+  text-align: right; /* ✨ 이 줄을 추가하여 우측 정렬합니다. */
 }
 
   /* ------------------------------------
@@ -386,6 +386,7 @@ table td:first-child {
     margin-top: 15px; /* 제목과의 간격 확보 */
   }
 }
+
 
 
 
