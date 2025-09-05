@@ -63,8 +63,8 @@ hr {
 
 /* 그룹 버튼 영역 */
 #group-buttons-container {
-    margin-bottom: 20px;
-    padding-bottom: 15px;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
     border-bottom: 1px solid #eee;
     display: flex;
     flex-wrap: wrap;
@@ -125,8 +125,8 @@ hr {
 .sort-controls {
     margin: 0px 0 10px;
     display: flex;             /* Flexbox 레이아웃으로 변경 */
-    justify-content: flex-end; /* 아이템들을 오른쪽 끝으로 정렬 */
-    gap: 8px;                  /* 버튼 사이에 8px 간격 추가 (선택 사항) */
+    justify-content: flex-start; /* 아이템들을 오른쪽 끝으로 정렬 */
+    gap: 4px;                  /* 버튼 사이에 8px 간격 추가 (선택 사항) */
 }
 .sort-controls .btn {
     background-color: #f39c12;
@@ -262,7 +262,7 @@ table td:first-child {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     gap: 16px;
-    padding-left: 20px; /* 카드 왼쪽 여백이 0이므로, 통계 부분에만 왼쪽 여백을 줌 */
+    padding-left: 5px; /* 카드 왼쪽 여백이 0이므로, 통계 부분에만 왼쪽 여백을 줌 */
 }
 
 /* 개별 통계 항목 */
@@ -328,5 +328,6 @@ table td:first-child {
         padding-left: 10px;
     }
 }
+
 
 
