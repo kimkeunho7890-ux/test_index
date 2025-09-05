@@ -449,8 +449,8 @@ function renderManagerDetails() {
      
      html += `
          <div class="sort-controls">
-             <button class="btn" onclick="setSort('합계')">합계 ${currentSortCriteria === '합계' ? (currentSortOrder === 'desc' ? '▼' : '▲') : ''}</button>
-             <button class="btn" onclick="setSort('이름')">이름 ${currentSortCriteria === '이름' ? (currentSortOrder === 'desc' ? '▼' : '▲') : ''}</button>
+             <button class="btn" onclick="setSort('합계')">합계순 ${currentSortCriteria === '합계' ? (currentSortOrder === 'desc' ? '▼' : '▲') : ''}</button>
+             <button class="btn" onclick="setSort('이름')">이름순 ${currentSortCriteria === '이름' ? (currentSortOrder === 'desc' ? '▼' : '▲') : ''}</button>
          </div>
      `;
 
@@ -668,6 +668,7 @@ function renderStoreDetailsTable(page = 1) {
     document.getElementById('filter-column').value = currentFilterColumn;
     document.getElementById('filter-input').value = currentFilterValue;
 }
+
 
 
 
