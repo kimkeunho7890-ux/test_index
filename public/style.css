@@ -317,7 +317,7 @@ table td:first-child {
      컴포넌트 (버튼, 헤더, 필터)
      ------------------------------------ */
   .btn {
-    padding: 8px 10px;
+    padding: 8px 5px;
     font-size: 0.9em;
     margin: 3px;
   }
@@ -357,10 +357,10 @@ table td:first-child {
   table th:first-child,
   table td:first-child {
   width: 60px;
-  min-width: 60px;
+  min-width: 40px;
   white-space: normal;
   word-break: break-all;
-  text-align: right; /* ✨ 이 줄을 추가하여 우측 정렬합니다. */
+  text-align: left; /* ✨ 이 줄을 추가하여 우측 정렬합니다. */
 }
 
   /* ------------------------------------
@@ -386,6 +386,7 @@ table td:first-child {
     margin-top: 15px; /* 제목과의 간격 확보 */
   }
 }
+
 
 
 
