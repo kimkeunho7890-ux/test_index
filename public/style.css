@@ -189,7 +189,7 @@ td:first-child {
 .details-list {
   list-style-type: none;
   padding: 0;
-  text-align: left; /* ✨ 핵심 수정: 리스트를 왼쪽으로 정렬합니다. */
+  text-align: right; /* ✨ 핵심 수정: 리스트를 왼쪽으로 정렬합니다. */
 }
 
 .details-list li {
@@ -240,3 +240,4 @@ td:first-child {
     align-items: stretch;
   }
 }
+
