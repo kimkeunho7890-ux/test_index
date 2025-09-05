@@ -124,7 +124,9 @@ hr {
 }
 .sort-controls {
     margin: 15px 0 10px;
-    text-align: right;
+    display: flex;             /* Flexbox 레이아웃으로 변경 */
+    justify-content: flex-end; /* 아이템들을 오른쪽 끝으로 정렬 */
+    gap: 8px;                  /* 버튼 사이에 8px 간격 추가 (선택 사항) */
 }
 .sort-controls .btn {
     background-color: #f39c12;
@@ -326,3 +328,4 @@ table td:first-child {
         padding-left: 10px;
     }
 }
+
