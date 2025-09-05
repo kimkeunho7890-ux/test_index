@@ -479,9 +479,37 @@ function renderManagerDetails() {
              <button class="btn btn-secondary" onclick="displayStoreDetails('${store}', '${currentManagerName}')">상세</button>
              ${store}
          </strong>
-         - 합계: <strong>${stats['합계']}</strong> (신규:${stats['신규']}, MNP:${stats['MNP']}, 기변:${stats['기변']}, 2nd:${stats['2nd']})<br>
-         - VAS: ${vasPercent}% | 고가치(95): ${highValuePercent}% | 당유: ${dangyouPercent}%
-             </li>
+<div class="store-details">
+    <div class="detail-item">
+        <span class="label">합계</span>
+        <span class="value">${stats['합계']}</span>
+    </div>
+    <div class="detail-item">
+        <span class="label">신규</span>
+        <span class="value">${stats['신규']}</span>
+    </div>
+    <div class="detail-item">
+        <span class="label">MNP</span>
+        <span class="value">${stats['MNP']}</span>
+    </div>
+    <div class="detail-item">
+        <span class="label">기변</span>
+        <span class="value">${stats['기변']}</span>
+    </div>
+     <div class="detail-item">
+        <span class="label">VAS</span>
+        <span class="value">${vasPercent}%</span>
+    </div>
+    <div class="detail-item">
+        <span class="label">고가치(95)</span>
+        <span class="value">${highValuePercent}%</span>
+    </div>
+    <div class="detail-item">
+        <span class="label">당유</span>
+        <span class="value">${dangyouPercent}%</span>
+    </div>
+</div>
+</li>
          `;
      });
      html += `</ul>`;
@@ -640,6 +668,7 @@ function renderStoreDetailsTable(page = 1) {
     document.getElementById('filter-column').value = currentFilterColumn;
     document.getElementById('filter-input').value = currentFilterValue;
 }
+
 
 
 
