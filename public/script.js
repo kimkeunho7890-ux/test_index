@@ -260,8 +260,8 @@ function displayGroupDetails(groupName) {
         if (!key) return;
 
         if (!stats[key]) {
-            stats[key] = { '신규': 0, 'MNP': 0, '기변': 0, '2nd': 0, '합계': 0, 'VAS': 0, '고가치(95)': 0, 'VAS모수': 0, '고가치모수': 0 };
-        }
+    stats[key] = { '신규': 0, 'MNP': 0, '기변': 0, '2nd': 0, '합계': 0, 'VAS': 0, '고가치(95)': 0, 'VAS모수': 0, '고가치모수': 0, '당유인정': 0, '당유전체': 0 };
+}
         stats[key]['신규'] += safeParseInt(row['신규']);
         stats[key]['MNP'] += safeParseInt(row['MNP']);
         stats[key]['기변'] += safeParseInt(row['기변']);
@@ -274,6 +274,12 @@ function displayGroupDetails(groupName) {
         if (row['모델유형'] && row['모델유형'].includes('2nd')) {
             stats[key]['2nd'] += 1;
         }
+        if (row['당유'] === '인정') {
+            stats[key]['당유인정'] += 1;
+            stats[key]['당유전체'] += 1;
+} else if (row['당유'] === '미인정') {
+    stats[key]['당유전체'] += 1;
+}
     });
 
     let html = `
@@ -288,7 +294,7 @@ function displayGroupDetails(groupName) {
         return stats[b]['합계'] - stats[a]['합계'];
     });
     
-    const fields = ['신규', 'MNP', '기변', '2nd', '합계', 'MNP(%)', 'VAS(%)', '고가치(95)(%)'];
+    const fields = ['신규', 'MNP', '기변', '2nd', '합계', 'MNP(%)', 'VAS(%)', '고가치(95)(%)', '당유(%)'];
 
     if (isOverallView) {
         const totalStats = { '신규': 0, 'MNP': 0, '기변': 0, '2nd': 0, '합계': 0, 'VAS': 0, '고가치(95)': 0, 'VAS모수': 0, '고가치모수': 0 };
@@ -315,6 +321,8 @@ function displayGroupDetails(groupName) {
                 totalValue = totalStats['VAS모수'] > 0 ? ((totalStats['VAS'] / totalStats['VAS모수']) * 100).toFixed(2) + '%' : '0%';
             } else if (field === '고가치(95)(%)') {
                 totalValue = totalStats['고가치모수'] > 0 ? ((totalStats['고가치(95)'] / totalStats['고가치모수']) * 100).toFixed(2) + '%' : '0%';
+            } else if (field === '당유(%)') {
+                Value = statData['당유전체'] > 0 ? ((statData['당유인정'] / statData['당유전체']) * 100).toFixed(2) + '%' : '0%';
             } else {
                 totalValue = totalStats[field.replace('(%)', '')];
             }
@@ -330,6 +338,8 @@ function displayGroupDetails(groupName) {
                     value = statData['VAS모수'] > 0 ? ((statData['VAS'] / statData['VAS모수']) * 100).toFixed(2) + '%' : '0%';
                 } else if (field === '고가치(95)(%)') {
                     value = statData['고가치모수'] > 0 ? ((statData['고가치(95)'] / statData['고가치모수']) * 100).toFixed(2) + '%' : '0%';
+                } else if (field === '당유(%)') {
+                    value = statData['당유전체'] > 0 ? ((statData['당유인정'] / statData['당유전체']) * 100).toFixed(2) + '%' : '0%';    
                 } else {
                     value = statData[field.replace('(%)', '')];
                 }
@@ -361,6 +371,8 @@ if (field === '합계') {
                     value = statData['VAS모수'] > 0 ? ((statData['VAS'] / statData['VAS모수']) * 100).toFixed(2) + '%' : '0%';
                 } else if (field === '고가치(95)(%)') {
                     value = statData['고가치모수'] > 0 ? ((statData['고가치(95)'] / statData['고가치모수']) * 100).toFixed(2) + '%' : '0%';
+                } else if (field === '당유(%)') {
+                   value = statData['당유전체'] > 0 ? ((statData['당유인정'] / statData['당유전체']) * 100).toFixed(2) + '%' : '0%';    
                 } else {
                     value = statData[field.replace('(%)', '')];
                 }
@@ -388,8 +400,8 @@ function displayManagerDetails(managerName) {
     managerData.forEach(row => {
         const store = row['판매점명'];
         if (!currentStoreStats[store]) {
-            currentStoreStats[store] = { '신규': 0, 'MNP': 0, '기변': 0, '2nd': 0, '합계': 0, 'VAS': 0, '고가치(95)': 0, 'VAS모수': 0, '고가치모수': 0 };
-        }
+            currentStoreStats[store] = { '신규': 0, 'MNP': 0, '기변': 0, '2nd': 0, '합계': 0, 'VAS': 0, '고가치(95)': 0, 'VAS모수': 0, '고가치모수': 0, '당유인정': 0, '당유전체': 0 };
+}
         currentStoreStats[store]['신규'] += safeParseInt(row['신규']);
         currentStoreStats[store]['MNP'] += safeParseInt(row['MNP']);
         currentStoreStats[store]['기변'] += safeParseInt(row['기변']);
@@ -402,6 +414,12 @@ function displayManagerDetails(managerName) {
         if (row['모델유형'] && row['모델유형'].includes('2nd')) {
             currentStoreStats[store]['2nd'] += 1;
         }
+        if (row['당유'] === '인정') {
+   currentStoreStats[store]['당유인정'] += 1;
+    currentStoreStats[store]['당유전체'] += 1;
+} else if (row['당유'] === '미인정') {
+    currentStoreStats[store]['당유전체'] += 1;
+}
     });
 
     renderManagerDetails();
@@ -454,11 +472,11 @@ function renderManagerDetails() {
         html += `
             <li>
                 <strong>
-                    <button class="btn btn-secondary" onclick="displayStoreDetails('${store}', '${currentManagerName}')">상세</button>
-                    ${store}
-                </strong><br>
-                - 합계: <strong>${stats['합계']}</strong> (신규:${stats['신규']}, MNP:${stats['MNP']}, 기변:${stats['기변']}, 2nd:${stats['2nd']})<br>
-                - VAS: ${vasPercent}% | 고가치(95): ${highValuePercent}%
+            <button class="btn btn-secondary" onclick="displayStoreDetails('${store}', '${currentManagerName}')">상세</button>
+            ${store}
+        </strong><br>
+        - 합계: <strong>${stats['합계']}</strong> (신규:${stats['신규']}, MNP:${stats['MNP']}, 기변:${stats['기변']}, 2nd:${stats['2nd']})<br>
+        - VAS: ${vasPercent}% | 고가치(95): ${highValuePercent}% | 당유: ${dangyouPercent}%
             </li>
         `;
     });
@@ -618,4 +636,5 @@ function renderStoreDetailsTable(page = 1) {
     document.getElementById('filter-column').value = currentFilterColumn;
     document.getElementById('filter-input').value = currentFilterValue;
 }
+
 
