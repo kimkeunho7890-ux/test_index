@@ -322,7 +322,7 @@ function displayGroupDetails(groupName) {
             } else if (field === '고가치(95)(%)') {
                 totalValue = totalStats['고가치모수'] > 0 ? ((totalStats['고가치(95)'] / totalStats['고가치모수']) * 100).toFixed(2) + '%' : '0%';
             } else if (field === '당유(%)') {
-                Value = statData['당유전체'] > 0 ? ((statData['당유인정'] / statData['당유전체']) * 100).toFixed(2) + '%' : '0%';
+                totalValue = totalStats['당유전체'] > 0 ? ((totalStats['당유인정'] / totalStats['당유전체']) * 100).toFixed(2) + '%' : '0%';
             } else {
                 totalValue = totalStats[field.replace('(%)', '')];
             }
@@ -468,6 +468,7 @@ function renderManagerDetails() {
         const stats = currentStoreStats[store];
         const vasPercent = stats['VAS모수'] > 0 ? ((stats['VAS'] / stats['VAS모수']) * 100).toFixed(2) : 0;
         const highValuePercent = stats['고가치모수'] > 0 ? ((stats['고가치(95)'] / stats['고가치모수']) * 100).toFixed(2) : 0;
+        const dangyouPercent = stats['당유전체'] > 0 ? ((stats['당유인정'] / stats['당유전체']) * 100).toFixed(2) : 0;
         
         html += `
             <li>
@@ -636,5 +637,6 @@ function renderStoreDetailsTable(page = 1) {
     document.getElementById('filter-column').value = currentFilterColumn;
     document.getElementById('filter-input').value = currentFilterValue;
 }
+
 
 
