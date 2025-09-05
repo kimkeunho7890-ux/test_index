@@ -188,8 +188,8 @@ td:first-child {
 /* 판매점 목록 리스트 스타일 (담당자 상세 보기) */
 .details-list {
   list-style-type: none;
-  padding: 0;
-  text-align: right; /* ✨ 핵심 수정: 리스트를 왼쪽으로 정렬합니다. */
+  padding: 10;
+  text-align: left; /* ✨ 핵심 수정: 리스트를 왼쪽으로 정렬합니다. */
 }
 
 .details-list li {
@@ -240,4 +240,5 @@ td:first-child {
     align-items: stretch;
   }
 }
+
 
