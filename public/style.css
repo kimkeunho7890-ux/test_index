@@ -327,8 +327,9 @@ table td:first-child {
 
 /* 상세 버튼의 여백 조정 */
 .details-list li strong .btn {
-    margin: 0 8px 0 0; /* 버튼의 오른쪽(판매점명 쪽)에만 8px 여백을 줌 */
+    margin: 0 1px 0 0; /* 버튼의 오른쪽(판매점명 쪽)에만 8px 여백을 줌 */
 }
+
 
 
 
