@@ -244,10 +244,7 @@ table td:first-child {
 /* 카드 제목 (버튼 + 판매점명) 스타일 (중복 통합) */
 .details-list li strong {
     display: flex;
-    flex-direction: row-reverse;
     align-items: center;
-    gap: 2px;
-    justify-content: flex-end; /* 오른쪽 정렬을 위해 추가 */
     font-size: 1.1em;
     color: #343a40;
     margin-bottom: 16px;
@@ -255,10 +252,17 @@ table td:first-child {
     border-bottom: 1px solid #f1f3f5;
 }
 
-/* 상세 버튼의 여백 조정 */
+/* strong 태그 내부의 버튼 스타일 */
 .details-list li strong .btn {
-    margin: 0 0 0 0;
+    order: 2;            /* ✨ 1. 버튼의 순서를 글자(기본값 0)보다 뒤로 보냅니다. */
+    margin-left: auto;   /* ✨ 2. 버튼 왼쪽의 모든 여백을 자동으로 채워 버튼을 오른쪽 끝으로 밀어냅니다. */
+    flex-shrink: 0;      /* 3. 화면이 줄어들 때 버튼이 찌그러지는 것을 방지합니다. */
 }
+    border-bottom: 1px solid #f1f3f5;
+}
+
+/* 상세 버튼의 여백 조정 */
+
 
 /* 상세 정보(통계)를 감싸는 영역 */
 .store-details {
@@ -281,7 +285,7 @@ table td:first-child {
 /* 통계 라벨 (예: '합계', 'VAS') */
 .detail-item .label {
     font-size: 0.85em;
-    color: #FFFACD;
+    color: #868e96;
     margin-bottom: 4px;
 }
 
@@ -331,6 +335,7 @@ table td:first-child {
         padding-left: 10px;
     }
 }
+
 
 
 
