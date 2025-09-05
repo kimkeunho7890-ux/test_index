@@ -114,7 +114,7 @@ hr {
     align-items: center;
     flex-wrap: wrap;
     gap: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
 }
 .nav-buttons {
     display: flex;
@@ -123,7 +123,7 @@ hr {
     margin-left: auto;
 }
 .sort-controls {
-    margin: 15px 0 10px;
+    margin: 0px 0 10px;
     display: flex;             /* Flexbox 레이아웃으로 변경 */
     justify-content: flex-end; /* 아이템들을 오른쪽 끝으로 정렬 */
     gap: 8px;                  /* 버튼 사이에 8px 간격 추가 (선택 사항) */
@@ -229,7 +229,7 @@ table td:first-child {
     background-color: #ffffff;
     border: 1px solid #e9ecef;
     border-radius: 8px;
-    padding: 20px 20px 20px 0; /* 상, 우, 하, 좌 여백 */
+    padding: 0 0 0 0; /* 상, 우, 하, 좌 여백 */
     margin-top: 16px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
@@ -328,4 +328,5 @@ table td:first-child {
         padding-left: 10px;
     }
 }
+
 
