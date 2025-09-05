@@ -478,7 +478,7 @@ function renderManagerDetails() {
                  <strong>
              <button class="btn btn-secondary" onclick="displayStoreDetails('${store}', '${currentManagerName}')">상세</button>
              ${store}
-         </strong><br>
+         </strong>
          - 합계: <strong>${stats['합계']}</strong> (신규:${stats['신규']}, MNP:${stats['MNP']}, 기변:${stats['기변']}, 2nd:${stats['2nd']})<br>
          - VAS: ${vasPercent}% | 고가치(95): ${highValuePercent}% | 당유: ${dangyouPercent}%
              </li>
@@ -640,6 +640,7 @@ function renderStoreDetailsTable(page = 1) {
     document.getElementById('filter-column').value = currentFilterColumn;
     document.getElementById('filter-input').value = currentFilterValue;
 }
+
 
 
 
