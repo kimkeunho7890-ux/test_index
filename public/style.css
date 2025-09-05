@@ -247,7 +247,7 @@ table td:first-child {
     flex-direction: row-reverse; /* 이 줄을 추가하세요 */
     align-items: center;
     gap: 10px;
-    justify-content: flex-end; /* 오른쪽 정렬을 위해 추가 */
+    justify-content: space-between; /* 오른쪽 정렬을 위해 추가 */
     font-size: 1.1em;
     color: #343a40;
     margin-bottom: 16px;
@@ -331,6 +331,7 @@ table td:first-child {
         padding-left: 10px;
     }
 }
+
 
 
 
