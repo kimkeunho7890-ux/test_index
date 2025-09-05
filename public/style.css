@@ -69,7 +69,7 @@ hr {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    justify-content: flex-start;
+    justify-content: center;
 }
 
 /* 전체 검색창 디자인 */
@@ -88,7 +88,7 @@ hr {
 }
 .global-search-container .filter-controls {
     display: flex;
-    gap: 5px;
+    gap: 10px;
     align-items: center;
     max-width: 600px;
     margin: 0 auto;
@@ -110,7 +110,7 @@ hr {
 /* 헤더 및 컨트롤 */
 .details-header {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
     gap: 10px;
@@ -125,7 +125,7 @@ hr {
 .sort-controls {
     margin: 0px 0 10px;
     display: flex;             /* Flexbox 레이아웃으로 변경 */
-    justify-content: flex-end; /* 아이템들을 오른쪽 끝으로 정렬 */
+    justify-content: flex-start; /* 아이템들을 오른쪽 끝으로 정렬 */
     gap: 4px;                  /* 버튼 사이에 8px 간격 추가 (선택 사항) */
 }
 .sort-controls .btn {
@@ -229,8 +229,8 @@ table td:first-child {
     background-color: #ffffff;
     border: 1px solid #e9ecef;
     border-radius: 8px;
-    padding: 15px 0; /* 상, 우, 하, 좌 여백 */
-    margin-top: 10px;
+    padding: 0 0 0 0; /* 상, 우, 하, 좌 여백 */
+    margin-top: 16px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
@@ -244,25 +244,19 @@ table td:first-child {
 /* 카드 제목 (버튼 + 판매점명) 스타일 (중복 통합) */
 .details-list li strong {
     display: flex;
+    gap: 5px;
     align-items: center;
-    justify-content: flex-end;   /* ✨ 이 부분이 그룹 전체를 오른쪽으로 보냅니다. */
-    gap: 1px;                   /* 버튼과 글자 사이 간격 */
     font-size: 1.1em;
     color: #343a40;
     margin-bottom: 16px;
-    margin-left: 0;
     padding-bottom: 12px;
     border-bottom: 1px solid #f1f3f5;
 }
 
-.details-list li strong .btn {
-    margin: 0;
-}
-    border-bottom: 1px solid #f1f3f5;
-}
-
 /* 상세 버튼의 여백 조정 */
-
+.details-list li strong .btn {
+    margin: 0 0 0 0;
+}
 
 /* 상세 정보(통계)를 감싸는 영역 */
 .store-details {
@@ -299,49 +293,97 @@ table td:first-child {
 /* -------------------------------------------------- */
 
 
-/* 반응형 디자인 (모바일) */
+/* ==========================================================================
+   반응형 디자인 (모바일 환경)
+   - 화면 너비가 768px 이하일 때 적용됩니다.
+   ========================================================================== */
 @media (max-width: 768px) {
-    body { padding: 5px; font-size: 0.85em; }
-    .container { padding: 10px; }
-    h1 { font-size: 1.4em; }
-    h2 { font-size: 1.1em; }
-    .btn { padding: 6px 10px; font-size: 0.85em; margin: 2px; }
+  /* ------------------------------------
+     전역 및 기본 레이아웃
+     ------------------------------------ */
+  body {
+    padding: 10px;
+    font-size: 14px; /* 가독성을 위해 상대 단위(em)보다 고정 단위(px)를 추천 */
+  }
 
-    .details-header { flex-direction: column; align-items: stretch; }
-    .details-header h2 { text-align: center; }
-    .nav-buttons { width: 100%; justify-content: center; }
+  .container {
+    padding: 10px;
+  }
 
-    .global-search-container { padding: 15px; }
-    .global-search-container h2 { font-size: 1.1em; }
+  h1 { font-size: 1.5em; }
+  h2 { font-size: 1.2em; }
 
-    table { font-size: 0.8em; }
-    th, td { padding: 5px 4px; }
+  /* ------------------------------------
+     컴포넌트 (버튼, 헤더, 필터)
+     ------------------------------------ */
+  .btn {
+    padding: 8px 10px;
+    font-size: 0.9em;
+    margin: 3px;
+  }
 
-    .filter-controls { flex-direction: column; align-items: stretch; margin: 10px 0; }
-    
-    table th:first-child, table td:first-child {
-        width: 60px;
-        min-width: 60px;
-        white-space: normal;
-        word-break: break-all;
-    }
-    .details-list li { padding: 10px; font-size: 0.9em; }
-    .pagination-info { margin: 0 10px; }
-    
-    /* 모바일에서 통계 항목 열 개수 조정 */
-    .store-details {
-        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-        gap: 8px;
-        padding-left: 10px;
-    }
+  .details-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .details-header h2 {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .nav-buttons {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .filter-controls {
+    flex-direction: column;
+    align-items: stretch;
+    margin: 10px 0;
+  }
+
+  /* ------------------------------------
+     테이블 관련 스타일
+     ------------------------------------ */
+  table {
+    font-size: 0.85em; /* 가독성을 위해 폰트 크기 약간 조정 */
+  }
+
+  th, td {
+    padding: 6px 5px;
+  }
+
+  /* 테이블 첫 번째 열 고정 및 줄바꿈 처리 */
+  table th:first-child,
+  table td:first-child {
+    width: 60px;
+    min-width: 60px;
+    white-space: normal;
+    word-break: break-all;
+  }
+
+  /* ------------------------------------
+     리스트 및 페이지네이션
+     ------------------------------------ */
+  .details-list li {
+    padding: 12px;
+    font-size: 0.95em;
+  }
+  
+  .pagination-info {
+    margin: 0 10px;
+  }
+
+  /* ------------------------------------
+     (신규) 판매점 상세 통계 그리드 스타일
+     - 이미지와 같은 디자인을 위한 스타일
+     ------------------------------------ */
+  .stats-grid { /* 이전에 'store-details'로 명명된 부분을 더 명확하게 변경 */
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+    gap: 8px;
+    margin-top: 15px; /* 제목과의 간격 확보 */
+  }
 }
-
-
-
-
-
-
-
-
 
 
