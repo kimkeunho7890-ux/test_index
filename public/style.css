@@ -356,11 +356,12 @@ table td:first-child {
   /* 테이블 첫 번째 열 고정 및 줄바꿈 처리 */
   table th:first-child,
   table td:first-child {
-    width: 60px;
-    min-width: 60px;
-    white-space: normal;
-    word-break: break-all;
-  }
+  width: 60px;
+  min-width: 60px;
+  white-space: normal;
+  word-break: break-all;
+  text-align: left; /* ✨ 이 줄을 추가하여 우측 정렬합니다. */
+}
 
   /* ------------------------------------
      리스트 및 페이지네이션
@@ -385,5 +386,6 @@ table td:first-child {
     margin-top: 15px; /* 제목과의 간격 확보 */
   }
 }
+
 
 
