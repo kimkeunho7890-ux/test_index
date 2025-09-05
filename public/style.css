@@ -255,7 +255,7 @@ table td:first-child {
 /* strong 태그 내부의 버튼 스타일 */
 .details-list li strong .btn {
     order: 2;            /* ✨ 1. 버튼의 순서를 글자(기본값 0)보다 뒤로 보냅니다. */
-    margin-left: auto;   /* ✨ 2. 버튼 왼쪽의 모든 여백을 자동으로 채워 버튼을 오른쪽 끝으로 밀어냅니다. */
+    margin-left: 0;   /* ✨ 2. 버튼 왼쪽의 모든 여백을 자동으로 채워 버튼을 오른쪽 끝으로 밀어냅니다. */
     flex-shrink: 0;      /* 3. 화면이 줄어들 때 버튼이 찌그러지는 것을 방지합니다. */
 }
     border-bottom: 1px solid #f1f3f5;
@@ -335,6 +335,7 @@ table td:first-child {
         padding-left: 10px;
     }
 }
+
 
 
 
