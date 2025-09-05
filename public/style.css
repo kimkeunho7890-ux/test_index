@@ -110,7 +110,7 @@ hr {
 /* 헤더 및 컨트롤 */
 .details-header {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     flex-wrap: wrap;
     gap: 10px;
@@ -125,7 +125,7 @@ hr {
 .sort-controls {
     margin: 0px 0 10px;
     display: flex;             /* Flexbox 레이아웃으로 변경 */
-    justify-content: flex-start; /* 아이템들을 오른쪽 끝으로 정렬 */
+    justify-content: flex-end; /* 아이템들을 오른쪽 끝으로 정렬 */
     gap: 4px;                  /* 버튼 사이에 8px 간격 추가 (선택 사항) */
 }
 .sort-controls .btn {
@@ -244,8 +244,9 @@ table td:first-child {
 /* 카드 제목 (버튼 + 판매점명) 스타일 (중복 통합) */
 .details-list li strong {
     display: flex;
+    flex-direction: row-reverse;
     align-items: center;
-    gap: 5px;
+    gap: 2px;
     justify-content: flex-end; /* 오른쪽 정렬을 위해 추가 */
     font-size: 1.1em;
     color: #343a40;
@@ -280,7 +281,7 @@ table td:first-child {
 /* 통계 라벨 (예: '합계', 'VAS') */
 .detail-item .label {
     font-size: 0.85em;
-    color: #868e96;
+    color: #FFFACD;
     margin-bottom: 4px;
 }
 
@@ -330,6 +331,7 @@ table td:first-child {
         padding-left: 10px;
     }
 }
+
 
 
 
