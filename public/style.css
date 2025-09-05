@@ -53,7 +53,7 @@ table td:first-child { position: -webkit-sticky; position: sticky; left: 0; z-in
     h1 { font-size: 1.4em; }
     h2 { font-size: 1.1em; }
     .btn { padding: 5px 8px; font-size: 0.8em; margin: 2px; }
-    .details-header h2 { margin-bottom: 5px; width: 100%; text-align: center; }
+    .details-header h2 { margin-bottom: 5px; width: 100%; text-align: left; }
     .nav-buttons { width: 100%; justify-content: center; }
     #group-buttons-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 3px; }
     .table-wrapper { display: block; overflow-x: auto; white-space: nowrap; }
@@ -71,3 +71,4 @@ table td:first-child { position: -webkit-sticky; position: sticky; left: 0; z-in
     .sort-controls { margin: 10px 0 5px; }
     .sort-controls .btn { font-size: 0.75em; }
 }
+
