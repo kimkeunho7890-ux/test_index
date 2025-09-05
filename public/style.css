@@ -227,7 +227,7 @@ table td:first-child {
 .details-list li {
     background-color: #f9f9f9;
     border: 1px solid #eee;
-    padding: 15px;
+    padding: 5px;
     margin-top: 10px;
     border-radius: 5px;
     line-height: 1.4;
@@ -271,3 +271,4 @@ table td:first-child {
     .details-list li { padding: 10px; font-size: 0.9em; }
     .pagination-info { margin: 0 10px; }
 }
+
