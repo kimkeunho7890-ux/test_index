@@ -228,7 +228,7 @@ table td:first-child {
     background-color: #f9f9f9;
     border: 1px solid #eee;
     /* 왼쪽 여백만 5px로, 나머지는 15px로 설정 */
-    padding: 15px 15px 15px 5px;
+    padding: 15px 15px 15px 0;
     margin-top: 10px;
     border-radius: 5px;
     line-height: 1.4;
@@ -272,6 +272,7 @@ table td:first-child {
     .details-list li { padding: 10px; font-size: 0.9em; }
     .pagination-info { margin: 0 10px; }
 }
+
 
 
 
