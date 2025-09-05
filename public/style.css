@@ -244,7 +244,7 @@ table td:first-child {
 /* 카드 제목 (버튼 + 판매점명) 스타일 (중복 통합) */
 .details-list li strong {
     display: flex;
-    gap: 0px;
+    gap: 20px;
     align-items: center;
     font-size: 1.1em;
     color: #343a40;
@@ -386,6 +386,7 @@ table td:first-child {
     margin-top: 15px; /* 제목과의 간격 확보 */
   }
 }
+
 
 
 
