@@ -438,82 +438,59 @@ function setSort(criteria) {
 }
 
 function renderManagerDetails() {
-     const displayArea = document.getElementById('display-area');
+    const displayArea = document.getElementById('display-area');
 
-     let html = `
-         <div class="details-header">
-             <h2>${currentManagerName} 담당 판매점 목록</h2>
-             <button class="btn btn-home" onclick="displayGroupButtons()">처음으로</button>
-         </div>
-     `;
-     
-     html += `
-         <div class="sort-controls">
-             <button class="btn" onclick="setSort('합계')">합계순 ${currentSortCriteria === '합계' ? (currentSortOrder === 'desc' ? '▼' : '▲') : ''}</button>
-             <button class="btn" onclick="setSort('이름')">이름순 ${currentSortCriteria === '이름' ? (currentSortOrder === 'desc' ? '▼' : '▲') : ''}</button>
-         </div>
-     `;
+    let html = `
+        <div class="details-header">
+            <h2>${currentManagerName} 담당 판매점 목록</h2>
+            <button class="btn btn-home" onclick="displayGroupButtons()">처음으로</button>
+        </div>
+    `;
+    
+    html += `
+        <div class="sort-controls">
+            <button class="btn" onclick="setSort('합계')">합계순 ${currentSortCriteria === '합계' ? (currentSortOrder === 'desc' ? '▼' : '▲') : ''}</button>
+            <button class="btn" onclick="setSort('이름')">이름순 ${currentSortCriteria === '이름' ? (currentSortOrder === 'desc' ? '▼' : '▲') : ''}</button>
+        </div>
+    `;
 
-     html += `<ul class="details-list">`;
-     
-     const sortedStores = Object.keys(currentStoreStats).sort((a, b) => {
-         if (currentSortCriteria === '이름') {
-             return currentSortOrder === 'asc' ? a.localeCompare(b) : b.localeCompare(a);
-         } else {
-             return currentSortOrder === 'asc' ? currentStoreStats[a]['합계'] - currentStoreStats[b]['합계'] : currentStoreStats[b]['합계'] - currentStoreStats[a]['합계'];
-         }
-     });
+    html += `<ul class="details-list">`;
+    
+    const sortedStores = Object.keys(currentStoreStats).sort((a, b) => {
+        if (currentSortCriteria === '이름') {
+            return currentSortOrder === 'asc' ? a.localeCompare(b) : b.localeCompare(a);
+        } else {
+            // 합계가 같을 경우 이름순으로 정렬
+            if (currentStoreStats[b]['합계'] === currentStoreStats[a]['합계']) {
+                return a.localeCompare(b);
+            }
+            return currentSortOrder === 'asc' ? currentStoreStats[a]['합계'] - currentStoreStats[b]['합계'] : currentStoreStats[b]['합계'] - currentStoreStats[a]['합계'];
+        }
+    });
 
-     currentManagerStoreList = sortedStores;
+    currentManagerStoreList = sortedStores;
 
-     sortedStores.forEach(store => {
-         const stats = currentStoreStats[store];
-         const vasPercent = stats['VAS모수'] > 0 ? ((stats['VAS'] / stats['VAS모수']) * 100).toFixed(2) : 0;
-         const highValuePercent = stats['고가치모수'] > 0 ? ((stats['고가치(95)'] / stats['고가치모수']) * 100).toFixed(2) : 0;
-        // ✨ 수정된 부분: dangyouPercent 변수 계산 로직 추가
-         const dangyouPercent = stats['당유전체'] > 0 ? ((stats['당유인정'] / stats['당유전체']) * 100).toFixed(2) : 0;
-         
-         html += `
-             <li>
-                 <strong>
-             <button class="btn btn-secondary" onclick="displayStoreDetails('${store}', '${currentManagerName}')">상세</button>
-             ${store}
-         </strong>
-<div class="store-details">
-    <div class="detail-item">
-        <span class="label">합계</span>
-        <span class="value">${stats['합계']}</span>
-    </div>
-    <div class="detail-item">
-        <span class="label">신규</span>
-        <span class="value">${stats['신규']}</span>
-    </div>
-    <div class="detail-item">
-        <span class="label">MNP</span>
-        <span class="value">${stats['MNP']}</span>
-    </div>
-    <div class="detail-item">
-        <span class="label">기변</span>
-        <span class="value">${stats['기변']}</span>
-    </div>
-     <div class="detail-item">
-        <span class="label">VAS</span>
-        <span class="value">${vasPercent}%</span>
-    </div>
-    <div class="detail-item">
-        <span class="label">고가치(95)</span>
-        <span class="value">${highValuePercent}%</span>
-    </div>
-    <div class="detail-item">
-        <span class="label">당유</span>
-        <span class="value">${dangyouPercent}%</span>
-    </div>
-</div>
-</li>
-         `;
-     });
-     html += `</ul>`;
-     displayArea.innerHTML = html;
+    sortedStores.forEach(store => {
+        const stats = currentStoreStats[store];
+        const vasPercent = stats['VAS모수'] > 0 ? ((stats['VAS'] / stats['VAS모수']) * 100).toFixed(2) : "0.00";
+        const highValuePercent = stats['고가치모수'] > 0 ? ((stats['고가치(95)'] / stats['고가치모수']) * 100).toFixed(2) : "0.00";
+        // 당유 퍼센트 계산 추가
+        const dangyouPercent = stats['당유전체'] > 0 ? ((stats['당유인정'] / stats['당유전체']) * 100).toFixed(2) : "0.00";
+        
+        // ✨✨✨ HTML 구조를 이미지와 같이 변경하는 부분 ✨✨✨
+        html += `
+            <li>
+                <button class="btn btn-secondary" onclick="displayStoreDetails('${store}', '${currentManagerName}')">상세</button>
+                <div class="store-info">
+                    <p class="store-name">${store}</p>
+                    <p class="stats-line">- 합계: <strong>${stats['합계']}</strong> (신규:${stats['신규']}, MNP:${stats['MNP']}, 기변:${stats['기변']}, 2nd:${stats['2nd']})</p>
+                    <p class="stats-line">- VAS: ${vasPercent}% | 고가치(95): ${highValuePercent}% | 당유: ${dangyouPercent}%</p>
+                </div>
+            </li>
+        `;
+    });
+    html += `</ul>`;
+    displayArea.innerHTML = html;
 }
 
 
@@ -668,7 +645,6 @@ function renderStoreDetailsTable(page = 1) {
     document.getElementById('filter-column').value = currentFilterColumn;
     document.getElementById('filter-input').value = currentFilterValue;
 }
-
 
 
 

@@ -216,80 +216,62 @@ table td:first-child {
 }
 
 
-/* --- 중복 제거 및 최종 정리된 판매점 목록 카드 스타일 --- */
+/* --- 판매점 목록 카드 스타일 (이미지 기반으로 수정) --- */
 
-/* 리스트 기본 */
+/* 리스트 기본 스타일 */
 .details-list {
     list-style-type: none;
     padding: 0;
 }
 
-/* 카드 기본 스타일 */
+/* 개별 판매점 카드 (li) */
 .details-list li {
-    background-color: #ffffff;
+    background-color: #f8f9fa; /* 이미지와 유사한 연한 회색 배경 */
     border: 1px solid #e9ecef;
     border-radius: 8px;
-    padding: 15px 0; /* 상, 우, 하, 좌 여백 */
-    margin-top: 16px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    padding: 15px;
+    margin-top: 12px;
+    display: flex; /* 내부 요소를 가로로 정렬하기 위해 flex 사용 */
+    align-items: center; /* 세로 중앙 정렬 */
+    gap: 15px; /* 버튼과 정보 사이의 간격 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
-/* 마우스를 올렸을 때 카드 살짝 위로 뜨는 효과 (중복 제거) */
 .details-list li:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.08);
 }
 
-/* 카드 제목 (버튼 + 판매점명) 스타일 (중복 통합) */
-.details-list li strong {
+/* '상세' 버튼은 기존 .btn-secondary 스타일을 그대로 활용합니다. */
+/* 버튼 크기나 여백만 살짝 조정합니다. */
+.details-list .btn {
+    flex-shrink: 0; /* 버튼 크기가 줄어들지 않도록 설정 */
+    margin: 0;
+    padding: 10px 15px;
+}
+
+/* 판매점명과 통계 정보를 감싸는 div */
+.store-info {
     display: flex;
-    gap: 20px;
-    align-items: center;
+    flex-direction: column; /* 정보들을 세로로 쌓음 */
+    gap: 5px; /* 이름과 통계 정보 사이의 간격 */
+}
+
+/* 판매점 이름 스타일 */
+.store-info .store-name {
+    font-weight: bold;
     font-size: 1.1em;
     color: #343a40;
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid #f1f3f5;
 }
 
-/* 상세 버튼의 여백 조정 */
-.details-list li strong .btn {
-    margin: 0 0 0 0;
-}
-
-/* 상세 정보(통계)를 감싸는 영역 */
-.store-details {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 16px;
-    padding-left: 5px; /* 카드 왼쪽 여백이 0이므로, 통계 부분에만 왼쪽 여백을 줌 */
-}
-
-/* 개별 통계 항목 */
-.detail-item {
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    background-color: #f8f9fa;
-    padding: 10px;
-    border-radius: 6px;
-}
-
-/* 통계 라벨 (예: '합계', 'VAS') */
-.detail-item .label {
-    font-size: 0.85em;
-    color: #868e96;
-    margin-bottom: 4px;
-}
-
-/* 통계 값 (예: '8', '60.00%') */
-.detail-item .value {
-    font-size: 1.2em;
-    font-weight: 600;
+/* 통계 정보 라인 스타일 */
+.store-info .stats-line {
+    font-size: 0.9em;
     color: #495057;
+    margin: 0; /* p 태그의 기본 마진 제거 */
+    line-height: 1.5;
 }
-
 /* -------------------------------------------------- */
 
 
@@ -386,7 +368,6 @@ table td:first-child {
     margin-top: 15px; /* 제목과의 간격 확보 */
   }
 }
-
 
 
 
